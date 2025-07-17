@@ -1,0 +1,136 @@
+.
+├── .DS_Store
+├── .eslintrc.js
+├── .expo
+│   ├── devices.json
+│   └── types
+│       └── router.d.ts
+├── .gitignore
+├── .vscode
+│   └── settings.json
+├── app
+│   ├── _layout.tsx
+│   ├── (api)
+│   │   ├── (stripe)
+│   │   │   ├── create+api.ts
+│   │   │   └── pay+api.ts
+│   │   ├── driver+api.ts
+│   │   ├── ride
+│   │   │   ├── [id]+api.ts
+│   │   │   └── create+api.ts
+│   │   └── user+api.ts
+│   ├── (auth)
+│   │   ├── _layout.tsx
+│   │   ├── sign-in.tsx
+│   │   ├── sign-up.tsx
+│   │   └── welcome.tsx
+│   ├── (root)
+│   │   ├── _layout.tsx
+│   │   ├── (tabs)
+│   │   │   ├── _layout.tsx
+│   │   │   ├── chat.tsx
+│   │   │   ├── home.tsx
+│   │   │   ├── profile.tsx
+│   │   │   └── rides.tsx
+│   │   ├── book-ride.tsx
+│   │   ├── confirm-ride.tsx
+│   │   └── find-ride.tsx
+│   ├── +html.tsx
+│   ├── +not-found.tsx
+│   └── index.tsx
+├── app.json
+├── assets
+│   ├── .DS_Store
+│   ├── fonts
+│   │   ├── PlusJakartaSans-Bold.ttf
+│   │   ├── PlusJakartaSans-BoldItalic.ttf
+│   │   ├── PlusJakartaSans-ExtraBold.ttf
+│   │   ├── PlusJakartaSans-ExtraBoldItalic.ttf
+│   │   ├── PlusJakartaSans-ExtraLight.ttf
+│   │   ├── PlusJakartaSans-ExtraLightItalic.ttf
+│   │   ├── PlusJakartaSans-Italic.ttf
+│   │   ├── PlusJakartaSans-Light.ttf
+│   │   ├── PlusJakartaSans-LightItalic.ttf
+│   │   ├── PlusJakartaSans-Medium.ttf
+│   │   ├── PlusJakartaSans-MediumItalic.ttf
+│   │   ├── PlusJakartaSans-Regular.ttf
+│   │   ├── PlusJakartaSans-SemiBold.ttf
+│   │   └── PlusJakartaSans-SemiBoldItalic.ttf
+│   ├── icons
+│   │   ├── arrow-down.png
+│   │   ├── arrow-up.png
+│   │   ├── back-arrow.png
+│   │   ├── chat.png
+│   │   ├── check.png
+│   │   ├── close.png
+│   │   ├── dollar.png
+│   │   ├── email.png
+│   │   ├── eyecross.png
+│   │   ├── google.png
+│   │   ├── home.png
+│   │   ├── list.png
+│   │   ├── lock.png
+│   │   ├── map.png
+│   │   ├── marker.png
+│   │   ├── out.png
+│   │   ├── person.png
+│   │   ├── pin.png
+│   │   ├── point.png
+│   │   ├── profile.png
+│   │   ├── search.png
+│   │   ├── selected-marker.png
+│   │   ├── star.png
+│   │   ├── target.png
+│   │   └── to.png
+│   └── images
+│       ├── .DS_Store
+│       ├── adaptive-icon.png
+│       ├── check.png
+│       ├── favicon.png
+│       ├── get-started.png
+│       ├── icon.png
+│       ├── message.png
+│       ├── no-result.png
+│       ├── onboarding1.png
+│       ├── onboarding2.png
+│       ├── onboarding3.png
+│       ├── partial-react-logo.png
+│       ├── react-logo.png
+│       ├── react-logo@2x.png
+│       ├── react-logo@3x.png
+│       ├── signup-car.png
+│       └── splash.png
+├── babel.config.js
+├── components
+│   ├── CustomButton.tsx
+│   ├── DriverCard.tsx
+│   ├── GoogleTextInput.tsx
+│   ├── InputField.tsx
+│   ├── Map.tsx
+│   ├── OAuth.tsx
+│   ├── Payment.tsx
+│   ├── RideCard.tsx
+│   └── RideLayout.tsx
+├── constants
+│   └── index.ts
+├── eslint.config.js
+├── expo-env.d.ts
+├── lib
+│   ├── auth.ts
+│   ├── fetch.ts
+│   ├── map.ts
+│   └── utils.ts
+├── nativewind-env.d.ts
+├── package-lock.json
+├── package.json
+├── README.md
+├── store
+│   └── index.ts
+├── tailwind.config.js
+├── tree.txt
+├── tsconfig.json
+└── types
+    ├── image.d.ts
+    └── type.d.ts
+
+20 directories, 114 files
