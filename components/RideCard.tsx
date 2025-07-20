@@ -6,71 +6,75 @@ import { Ride } from "@/types/type";
 
 const RideCard = ({ ride }: { ride: Ride }) => {
   return (
-    <View className="flex flex-row items-center justify-center bg-white rounded-lg shadow-sm shadow-neutral-300 mb-3">
-      <View className="flex flex-col items-start justify-center p-3">
-        <View className="flex flex-row items-center justify-between">
-          <Image
-            source={{
-              uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:${ride.destination_longitude},${ride.destination_latitude}&zoom=14&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
-            }}
-            className="w-[80px] h-[90px] rounded-lg"
-          />
-
-          <View className="flex flex-col mx-5 gap-y-5 flex-1">
-            <View className="flex flex-row items-center gap-x-2">
-              <Image source={icons.to} className="w-5 h-5" />
-              <Text className="text-md font-JakartaMedium" numberOfLines={1}>
-                {ride.origin_address}
-              </Text>
-            </View>
-
-            <View className="flex flex-row items-center gap-x-2">
-              <Image source={icons.point} className="w-5 h-5" />
-              <Text className="text-md font-JakartaMedium" numberOfLines={1}>
-                {ride.destination_address}
-              </Text>
-            </View>
+    <View className="bg-white rounded-xl shadow-md shadow-primary-300 mb-4 p-4">
+      <View className="flex-row items-center justify-between">
+        <Image
+          source={{
+            uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=600&height=400&center=lonlat:${ride.destination_longitude},${ride.destination_latitude}&zoom=14&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
+          }}
+          className="w-20 h-20 rounded-lg"
+          resizeMode="cover"
+        />
+        <View className="flex-1 ml-4">
+          <View className="flex-row items-center mb-2">
+            <Image source={icons.to} className="w-5 h-5" />
+            <Text
+              className="text-base font-PlusJakartaSans-Medium text-primary-800 ml-2"
+              numberOfLines={1}
+            >
+              {ride.origin_address}
+            </Text>
+          </View>
+          <View className="flex-row items-center">
+            <Image source={icons.point} className="w-5 h-5" />
+            <Text
+              className="text-base font-PlusJakartaSans-Medium text-primary-800 ml-2"
+              numberOfLines={1}
+            >
+              {ride.destination_address}
+            </Text>
           </View>
         </View>
-
-        <View className="flex flex-col w-full mt-5 bg-general-500 rounded-lg p-3 items-start justify-center">
-          <View className="flex flex-row items-center w-full justify-between mb-5">
-            <Text className="text-md font-JakartaMedium text-gray-500">
-              Date & Time
-            </Text>
-            <Text className="text-md font-JakartaBold" numberOfLines={1}>
-              {formatDate(ride.created_at)}, {formatTime(ride.ride_time)}
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center w-full justify-between mb-5">
-            <Text className="text-md font-JakartaMedium text-gray-500">
-              Driver
-            </Text>
-            <Text className="text-md font-JakartaBold">
-              {ride.driver.first_name} {ride.driver.last_name}
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center w-full justify-between mb-5">
-            <Text className="text-md font-JakartaMedium text-gray-500">
-              Car Seats
-            </Text>
-            <Text className="text-md font-JakartaBold">
-              {ride.driver.car_seats}
-            </Text>
-          </View>
-
-          <View className="flex flex-row items-center w-full justify-between">
-            <Text className="text-md font-JakartaMedium text-gray-500">
-              Payment Status
-            </Text>
-            <Text
-              className={`text-md capitalize font-JakartaBold ${ride.payment_status === "paid" ? "text-green-500" : "text-red-500"}`}
-            >
-              {ride.payment_status}
-            </Text>
-          </View>
+      </View>
+      <View className="mt-4 bg-primary-100 rounded-lg p-4">
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className="text-sm font-PlusJakartaSans-Medium text-primary-600">
+            Date & Time
+          </Text>
+          <Text
+            className="text-sm font-PlusJakartaSans-SemiBold text-primary-800"
+            numberOfLines={1}
+          >
+            {formatDate(ride.created_at)}, {formatTime(ride.ride_time)}
+          </Text>
+        </View>
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className="text-sm font-PlusJakartaSans-Medium text-primary-600">
+            Driver
+          </Text>
+          <Text className="text-sm font-PlusJakartaSans-SemiBold text-primary-800">
+            {ride.driver.first_name} {ride.driver.last_name}
+          </Text>
+        </View>
+        <View className="flex-row items-center justify-between mb-3">
+          <Text className="text-sm font-PlusJakartaSans-Medium text-primary-600">
+            Car Seats
+          </Text>
+          <Text className="text-sm font-PlusJakartaSans-SemiBold text-primary-800">
+            {ride.driver.car_seats}
+          </Text>
+        </View>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-sm font-PlusJakartaSans-Medium text-primary-600">
+            Payment Status
+          </Text>
+          <Text
+            className={`text-sm font-PlusJakartaSans-SemiBold ${
+              ride.payment_status === "paid" ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {ride.payment_status}
+          </Text>
         </View>
       </View>
     </View>

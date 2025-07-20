@@ -3,10 +3,12 @@
 ├── .eslintrc.js
 ├── .expo
 │   ├── devices.json
+│   ├── README.md
 │   └── types
 │       └── router.d.ts
 ├── .gitignore
 ├── .vscode
+│   ├── .react
 │   └── settings.json
 ├── app
 │   ├── _layout.tsx
@@ -93,12 +95,14 @@
 │       ├── no-result.png
 │       ├── onboarding1.png
 │       ├── onboarding2.png
+│       ├── onboarding3.gif
 │       ├── onboarding3.png
 │       ├── partial-react-logo.png
 │       ├── react-logo.png
 │       ├── react-logo@2x.png
 │       ├── react-logo@3x.png
 │       ├── signup-car.png
+│       ├── splash.gif
 │       └── splash.png
 ├── babel.config.js
 ├── components
@@ -133,4 +137,4 @@
     ├── image.d.ts
     └── type.d.ts
 
-20 directories, 114 files
+21 directories, 117 files

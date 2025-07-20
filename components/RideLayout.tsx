@@ -23,50 +23,32 @@ const RideLayout = ({
 
   return (
     <GestureHandlerRootView className="flex-1">
-      <View className="flex-1 bg-white">
-        <View className="flex flex-col h-screen bg-purple-500">
-          <View className="flex flex-row absolute z-10 top-16 items-center justify-start px-5">
+      <View className="flex-1 bg-primary-100">
+        <View className="flex-col h-screen">
+          <View className="flex-row items-center justify-start px-5 pt-12 pb-4 bg-primary-100 shadow-md shadow-primary-300">
             <TouchableOpacity onPress={() => router.back()}>
-              <View className="w-10 h-10 bg-white rounded-full items-center justify-center">
+              <View className="w-10 h-10 bg-white rounded-full items-center justify-center shadow-md shadow-primary-400">
                 <Image
                   source={icons.backArrow}
                   resizeMode="contain"
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                 />
               </View>
             </TouchableOpacity>
-            <Text className="text-xl font-JakartaSemiBold ml-5">
+            <Text className="text-xl font-PlusJakartaSans-SemiBold text-primary-800 ml-4">
               {title || "Go Back"}
             </Text>
           </View>
-
           <Map />
         </View>
-
         <BottomSheet
           ref={bottomSheetRef}
           snapPoints={snapPoints || ["40%", "85%"]}
           index={0}
+          backgroundStyle={{ backgroundColor: "#FFFFFF", borderRadius: 20 }}
+          handleIndicatorStyle={{ backgroundColor: "#6B008F" }}
         >
-          {title === "Choose a Rider" ? (
-            <BottomSheetView
-              style={{
-                flex: 1,
-                padding: 20,
-              }}
-            >
-              {children}
-            </BottomSheetView>
-          ) : (
-            <BottomSheetScrollView
-              style={{
-                flex: 1,
-                padding: 20,
-              }}
-            >
-              {children}
-            </BottomSheetScrollView>
-          )}
+          {children}
         </BottomSheet>
       </View>
     </GestureHandlerRootView>

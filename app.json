@@ -8,29 +8,41 @@
     "scheme": "carbucarbu",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.gif",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#8A00C4"
     },
+    "permissions": [
+      "location"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show your current position and provide ride-sharing services."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
+      "output": "server",
       "bundler": "metro",
-      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "expo-router",
+      "expo-font",
       [
-        "expo-router",
+        "expo-location",
         {
-          "origin": "https://carbucarbu.dev/"
+          "locationWhenInUsePermission": "This app needs access to your location to show your current position and provide ride-sharing services."
         }
       ]
     ],

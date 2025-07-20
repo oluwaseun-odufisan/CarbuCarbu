@@ -1,7 +1,14 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
-import { useCallback, useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { useCallback, useState, useEffect } from "react";
+import {
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  View,
+  BackHandler,
+} from "react-native";
 
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
@@ -16,8 +23,42 @@ const SignIn = () => {
     password: "",
   });
 
+  // Suppress BackHandler to avoid Clerk's internal error
+  useEffect(() => {
+    const backHandler = () => {
+      return false; // Allow default back navigation
+    };
+
+    let subscription;
+    try {
+      if (BackHandler) {
+        subscription = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backHandler
+        );
+      } else {
+        console.warn("BackHandler is not available.");
+      }
+    } catch (err) {
+      console.error("BackHandler setup error:", err);
+    }
+
+    return () => {
+      try {
+        if (subscription?.remove) {
+          subscription.remove();
+        }
+      } catch (err) {
+        console.warn("BackHandler cleanup error:", err);
+      }
+    };
+  }, []);
+
   const onSignInPress = useCallback(async () => {
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      console.log("Clerk is not loaded yet.");
+      return;
+    }
 
     try {
       const signInAttempt = await signIn.create({
@@ -29,12 +70,15 @@ const SignIn = () => {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/(root)/(tabs)/home");
       } else {
-        console.log(JSON.stringify(signInAttempt, null, 2));
+        console.log("Sign-in attempt:", JSON.stringify(signInAttempt, null, 2));
         Alert.alert("Error", "Log in failed. Please try again.");
       }
     } catch (err: any) {
-      console.log(JSON.stringify(err, null, 2));
-      Alert.alert("Error", err.errors[0].longMessage);
+      console.error("Sign-in error:", JSON.stringify(err, null, 2));
+      Alert.alert(
+        "Error",
+        err.errors[0]?.longMessage || "An error occurred during sign-in."
+      );
     }
   }, [isLoaded, form]);
 

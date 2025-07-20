@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 
 import CustomButton from "@/components/CustomButton";
 import DriverCard from "@/components/DriverCard";
@@ -10,26 +11,30 @@ const ConfirmRide = () => {
   const { drivers, selectedDriver, setSelectedDriver } = useDriverStore();
 
   return (
-    <RideLayout title={"Choose a Rider"} snapPoints={["65%", "85%"]}>
-      <FlatList
-        data={drivers}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <DriverCard
-            item={item}
-            selected={selectedDriver!}
-            setSelected={() => setSelectedDriver(item.id!)}
-          />
-        )}
-        ListFooterComponent={() => (
-          <View className="mx-5 mt-10">
-            <CustomButton
-              title="Select Ride"
-              onPress={() => router.push("/(root)/book-ride")}
+    <RideLayout title="Choose a Rider" snapPoints={["65%", "85%"]}>
+      <View className="flex-1 bg-primary-100 px-5">
+        <BottomSheetFlatList
+          data={drivers}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <DriverCard
+              item={item}
+              selected={selectedDriver!}
+              setSelected={() => setSelectedDriver(item.id!)}
             />
-          </View>
-        )}
-      />
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          ListFooterComponent={() => (
+            <View className="px-5 py-4">
+              <CustomButton
+                title="Select Ride"
+                onPress={() => router.push("/(root)/book-ride")}
+                className="bg-primary-500 rounded-xl shadow-md shadow-primary-300"
+              />
+            </View>
+          )}
+        />
+      </View>
     </RideLayout>
   );
 };

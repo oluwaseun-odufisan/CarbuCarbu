@@ -1,23 +1,32 @@
 import { useOAuth } from "@clerk/clerk-expo";
-import { router } from "expo-router";
-import { Alert, Image, Text, View } from "react-native";
-
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Image, Text, View } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import { googleOAuth } from "@/lib/auth";
+import { router } from "expo-router";
 
 const OAuth = () => {
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
-    const result = await googleOAuth(startOAuthFlow);
-
-    if (result.code === "session_exists") {
-      Alert.alert("Success", "Session exists. Redirecting to home screen.");
-      router.replace("/(root)/(tabs)/home");
+    setLoading(true);
+    try {
+      const result = await googleOAuth(startOAuthFlow);
+      if (result.success) {
+        // Delay navigation to ensure RootLayout is mounted
+        setTimeout(() => {
+          router.replace("/(root)/(tabs)/home");
+        }, 100);
+      } else {
+        console.error("Google OAuth error:", result.message);
+      }
+    } catch (err) {
+      console.error("Unexpected OAuth error:", err);
+    } finally {
+      setLoading(false);
     }
-
-    Alert.alert(result.success ? "Success" : "Error", result.message);
   };
 
   return (
@@ -41,6 +50,12 @@ const OAuth = () => {
         bgVariant="outline"
         textVariant="primary"
         onPress={handleGoogleSignIn}
+        disabled={loading}
+        IconRight={() =>
+          loading ? (
+            <ActivityIndicator size="small" color="#6B008F" className="ml-2" />
+          ) : null
+        }
       />
     </View>
   );
