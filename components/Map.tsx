@@ -35,6 +35,11 @@ const Map = () => {
   const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
+    if (!directionsAPI) {
+      console.error("Directions API key is missing");
+      setRouteError("Map configuration error. Please contact support.");
+      return;
+    }
     if (Array.isArray(drivers) && userLatitude && userLongitude) {
       const newMarkers = generateMarkersFromData({
         data: drivers,
@@ -42,38 +47,57 @@ const Map = () => {
         userLongitude,
       });
       setMarkers(newMarkers);
+    } else {
+      console.warn("Missing drivers or user location:", {
+        drivers: Array.isArray(drivers),
+        userLatitude,
+        userLongitude,
+      });
     }
   }, [drivers, userLatitude, userLongitude]);
 
   useEffect(() => {
     if (
       markers.length > 0 &&
-      destinationLatitude !== undefined &&
-      destinationLongitude !== undefined &&
-      userLatitude !== null &&
-      userLongitude !== null
+      destinationLatitude != null &&
+      destinationLongitude != null &&
+      userLatitude != null &&
+      userLongitude != null
     ) {
+      console.log("Calculating driver times with:", {
+        userLatitude,
+        userLongitude,
+        destinationLatitude,
+        destinationLongitude,
+        markersCount: markers.length,
+      });
       calculateDriverTimes({
         markers,
         userLatitude,
         userLongitude,
         destinationLatitude,
         destinationLongitude,
-      }).then((drivers) => {
-        setDrivers(drivers as MarkerData[]);
-        if (drivers.length > 0) {
-          const { distance, time } = drivers[0];
-          setRouteInfo({
-            distance: `${(distance / 1000).toFixed(1)} km`,
-            duration: `${Math.ceil(time / 60)} min`,
-          });
-        }
-      });
+      })
+        .then((drivers) => {
+          setDrivers(drivers as MarkerData[]);
+          if (drivers.length > 0 && drivers[0].time) {
+            setRouteInfo({
+              distance: `${(drivers[0].distance / 1000 || 0).toFixed(1)} km`,
+              duration: `${Math.ceil(drivers[0].time / 60 || 0)} min`,
+            });
+          } else {
+            setRouteError("Unable to calculate route. Please try again.");
+          }
+        })
+        .catch((err) => {
+          console.error("Error in calculateDriverTimes:", err);
+          setRouteError("Failed to calculate driver times. Please try again.");
+        });
       // Fit map to route
       if (mapRef.current && destinationLatitude && destinationLongitude) {
         mapRef.current.fitToCoordinates(
           [
-            { latitude: userLatitude!, longitude: userLongitude! },
+            { latitude: userLatitude, longitude: userLongitude },
             { latitude: destinationLatitude, longitude: destinationLongitude },
           ],
           {
@@ -83,7 +107,13 @@ const Map = () => {
         );
       }
     } else {
-      // Reset routeInfo and error when no destination is set
+      console.warn("Skipping driver times calculation:", {
+        markers: markers.length,
+        destinationLatitude,
+        destinationLongitude,
+        userLatitude,
+        userLongitude,
+      });
       setRouteInfo(null);
       setRouteError(null);
       // Reset map to user location
@@ -112,10 +142,13 @@ const Map = () => {
     destinationLongitude,
   });
 
-  if (loading || !userLatitude || !userLongitude) {
+  if (loading || userLatitude == null || userLongitude == null) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#6B008F" />
+        <Text className="text-base font-PlusJakartaSans-Medium text-primary-800 mt-2">
+          Loading map...
+        </Text>
       </View>
     );
   }
@@ -148,12 +181,12 @@ const Map = () => {
           {
             featureType: "all",
             elementType: "geometry.fill",
-            stylers: [{ color: "#F5E6FF" }], // primary-100
+            stylers: [{ color: "#F5E6FF" }],
           },
           {
             featureType: "road",
             elementType: "geometry.stroke",
-            stylers: [{ color: "#8A00C4" }], // primary-500
+            stylers: [{ color: "#8A00C4" }],
           },
         ]}
       >
@@ -173,10 +206,10 @@ const Map = () => {
               }
             />
           ))}
-        {destinationLatitude &&
-          destinationLongitude &&
-          userLatitude &&
-          userLongitude && (
+        {destinationLatitude != null &&
+          destinationLongitude != null &&
+          userLatitude != null &&
+          userLongitude != null && (
             <>
               <Marker
                 key="destination"
@@ -197,8 +230,8 @@ const Map = () => {
                   longitude: destinationLongitude,
                 }}
                 apikey={directionsAPI!}
-                strokeColor="#6B008F" // primary-500
-                strokeWidth={6} // Thicker line for Uber-like style
+                strokeColor="#6B008F"
+                strokeWidth={6}
                 lineDashPattern={[0, 0]}
                 onReady={(result) => {
                   if (result.status === "ZERO_RESULTS") {
@@ -213,7 +246,6 @@ const Map = () => {
                     distance: `${result.distance.toFixed(1)} km`,
                     duration: `${Math.ceil(result.duration)} min`,
                   });
-                  // Fit map to route
                   if (mapRef.current) {
                     mapRef.current.fitToCoordinates(
                       [
@@ -246,8 +278,8 @@ const Map = () => {
       </MapView>
       {isFindRide &&
         routeInfo &&
-        destinationLatitude &&
-        destinationLongitude &&
+        destinationLatitude != null &&
+        destinationLongitude != null &&
         !routeError && (
           <View className="absolute top-4 left-4 right-4 bg-white rounded-xl p-4 shadow-md shadow-primary-300 flex-row justify-between items-center">
             <View className="flex-row items-center">

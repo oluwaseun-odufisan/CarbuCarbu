@@ -2,10 +2,6 @@ import { Driver, MarkerData } from "@/types/type";
 
 const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
 
-if (!directionsAPI) {
-  console.error("Directions API key is missing. Please check your .env file.");
-}
-
 export const generateMarkersFromData = ({
   data,
   userLatitude,
@@ -15,6 +11,13 @@ export const generateMarkersFromData = ({
   userLatitude: number;
   userLongitude: number;
 }): MarkerData[] => {
+  if (!userLatitude || !userLongitude) {
+    console.warn("Invalid user coordinates for marker generation:", {
+      userLatitude,
+      userLongitude,
+    });
+    return [];
+  }
   return data.map((driver) => {
     const latOffset = (Math.random() - 0.5) * 0.01;
     const lngOffset = (Math.random() - 0.5) * 0.01;
@@ -63,8 +66,8 @@ export const calculateRegion = ({
   const minLng = Math.min(userLongitude, destinationLongitude);
   const maxLng = Math.max(userLongitude, destinationLongitude);
 
-  const latitudeDelta = (maxLat - minLat) * 1.3;
-  const longitudeDelta = (maxLng - minLng) * 1.3;
+  const latitudeDelta = (maxLat - minLat) * 1.3 || 0.01;
+  const longitudeDelta = (maxLng - minLng) * 1.3 || 0.01;
 
   const latitude = (userLatitude + destinationLatitude) / 2;
   const longitude = (userLongitude + destinationLongitude) / 2;
@@ -97,8 +100,14 @@ export const calculateDriverTimes = async ({
     !destinationLongitude ||
     !directionsAPI
   ) {
-    console.error("Missing required coordinates or API key");
-    return markers;
+    console.error("Missing required coordinates or API key:", {
+      userLatitude,
+      userLongitude,
+      destinationLatitude,
+      destinationLongitude,
+      hasApiKey: !!directionsAPI,
+    });
+    return markers.map((marker) => ({ ...marker, time: 0, price: "0.00" }));
   }
 
   try {
@@ -107,48 +116,50 @@ export const calculateDriverTimes = async ({
         `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`
       );
       const dataToUser = await responseToUser.json();
-      console.log(
-        "Directions to user response:",
-        JSON.stringify(dataToUser, null, 2)
-      );
+      console.log(`Directions to user for marker ${marker.id}:`, {
+        status: dataToUser.status,
+        error: dataToUser.error_message,
+      });
       if (dataToUser.status !== "OK") {
         console.error(
-          "Directions to user error:",
+          `Directions to user error for marker ${marker.id}:`,
           dataToUser.status,
           dataToUser.error_message
         );
-        return { ...marker, time: 0, price: "0.00" };
+        return { ...marker, time: 0, price: "0.00", distance: 0 };
       }
       const timeToUser = dataToUser.routes[0].legs[0].duration.value;
+      const distanceToUser = dataToUser.routes[0].legs[0].distance.value;
 
       const responseToDestination = await fetch(
         `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`
       );
       const dataToDestination = await responseToDestination.json();
-      console.log(
-        "Directions to destination response:",
-        JSON.stringify(dataToDestination, null, 2)
-      );
+      console.log(`Directions to destination for marker ${marker.id}:`, {
+        status: dataToDestination.status,
+        error: dataToDestination.error_message,
+      });
       if (dataToDestination.status !== "OK") {
         console.error(
-          "Directions to destination error:",
+          `Directions to destination error for marker ${marker.id}:`,
           dataToDestination.status,
           dataToDestination.error_message
         );
-        return { ...marker, time: 0, price: "0.00" };
+        return { ...marker, time: 0, price: "0.00", distance: 0 };
       }
-      const timeToDestination =
-        dataToDestination.routes[0].legs[0].duration.value;
+      const timeToDestination = dataToDestination.routes[0].legs[0].duration.value;
+      const distanceToDestination = dataToDestination.routes[0].legs[0].distance.value;
 
       const totalTime = (timeToUser + timeToDestination) / 60;
+      const totalDistance = distanceToUser + distanceToDestination;
       const price = (totalTime * 0.5).toFixed(2);
 
-      return { ...marker, time: totalTime, price };
+      return { ...marker, time: totalTime, price, distance: totalDistance };
     });
 
     return await Promise.all(timesPromises);
   } catch (error) {
     console.error("Error calculating driver times:", error);
-    return markers;
+    return markers.map((marker) => ({ ...marker, time: 0, price: "0.00", distance: 0 }));
   }
 };
