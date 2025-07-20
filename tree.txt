@@ -12,6 +12,7 @@
 │   └── settings.json
 ├── app
 │   ├── _layout.tsx
+│   ├── .DS_Store
 │   ├── (api)
 │   │   ├── (stripe)
 │   │   │   ├── create+api.ts
@@ -67,7 +68,9 @@
 │   │   ├── close.png
 │   │   ├── dollar.png
 │   │   ├── email.png
+│   │   ├── eye.png
 │   │   ├── eyecross.png
+│   │   ├── eyeoff.png
 │   │   ├── google.png
 │   │   ├── home.png
 │   │   ├── list.png
@@ -117,6 +120,33 @@
 │   └── RideLayout.tsx
 ├── constants
 │   └── index.ts
+├── docs
+│   ├── .DS_Store
+│   ├── diagrams
+│   │   ├── auth-class-diagram.png
+│   │   ├── auth-component-diagram.png
+│   │   ├── dfd-auth.png
+│   │   ├── dfd-level0.png
+│   │   ├── signin-sequence.png
+│   │   ├── signup-sequence.png
+│   │   └── system-architecture.png
+│   └── screenshots
+│       ├── bookridescreen.png
+│       ├── confirmridescreen.png
+│       ├── findridescreen1.png
+│       ├── findridescreen2.png
+│       ├── homescreen2.png
+│       ├── paymentscreen.png
+│       ├── profilescreen.png
+│       ├── ridesscreen.png
+│       ├── selectridescreen1.png
+│       ├── selectridescreen2.png
+│       ├── signinscreen.png
+│       ├── signupscreen.gif
+│       ├── welcomescreen1.png
+│       ├── welcomescreen2.png
+│       ├── welcomescreen3.gif
+│       └── welcomescreen3.png
 ├── eslint.config.js
 ├── expo-env.d.ts
 ├── lib
@@ -137,4 +167,4 @@
     ├── image.d.ts
     └── type.d.ts
 
-21 directories, 117 files
+24 directories, 144 files
